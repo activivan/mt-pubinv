@@ -1,0 +1,2 @@
+pubinv_cols (Number of columns in public inventory) int 9 1
+pubinv_rows (Number of rows in public inventory) int 3 1

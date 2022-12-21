@@ -1,0 +1,4 @@
+# textdomain: pubinv
+
+Your inventory=
+Public inventory=
