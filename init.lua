@@ -5,8 +5,8 @@ local storage = minetest.get_mod_storage()
 local S = minetest.get_translator(minetest.get_current_modname())
 local conf = minetest.settings
 
-local cols = conf:get("pubinv_cols") or 9
-local rows = conf:get("pubinv_rows") or 3
+local cols = tonumber(conf:get("pubinv_cols")) or 9
+local rows = tonumber(conf:get("pubinv_rows")) or 3
 
 local function save(inv_list)
 	local data = {}
