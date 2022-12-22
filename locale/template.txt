@@ -2,3 +2,4 @@
 
 Your inventory=
 Public inventory=
+Opens the public inventory=
