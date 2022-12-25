@@ -6,10 +6,12 @@ To open the public inventory, type:
 ```
 /pi
 ```
+Alternatively, if you are using SFINV (included in Minetest Game) or Unified Inventory, you can open the corresponding tab or click the corresponding button.
 
 ## Features
 * MineClone support
 * Custom size
+* SFINV and Unified Inventory integration
 
 ## Configuration
 Configure the size of the public inventory by setting the number of rows and columns in your `minetest.conf` file:

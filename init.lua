@@ -8,6 +8,7 @@ local conf = minetest.settings
 local cols = tonumber(conf:get("pubinv_cols")) or 9
 local rows = tonumber(conf:get("pubinv_rows")) or 3
 
+local use_mcl_formspec = false
 
 -- ---------------------------
 -- Detached inventory handling
@@ -59,10 +60,10 @@ pubinv.formspec = function(name)
 	return (size..
 			"label[0,0;"..S("Public inventory").."]"..
 			"list[detached:pi;main;0,0.5;"..cols..","..rows..";]"..
-			(mcl_formspec and mcl_formspec.get_itemslot_bg(0, 0.5, cols, rows) or "")..
+			(use_mcl_formspec and mcl_formspec.get_itemslot_bg(0, 0.5, cols, rows) or "")..
 			"label[0,"..(rows + 0.75)..";"..S("Your inventory").."]"..
 			"list[current_player;main;0,"..(rows + 1.25)..";"..((inv_size > cols) and cols or inv_size)..","..((inv_size > cols) and inv_rows or 1)..";]"..
-			(mcl_formspec and 
+			(use_mcl_formspec and 
 				mcl_formspec.get_itemslot_bg(0, (rows + 1.25), ((inv_size > cols) and cols or inv_size), ((inv_size > cols) and (inv_rows - 1) or 1))..
 				((inv_size > cols) and mcl_formspec.get_itemslot_bg(0, (rows + inv_rows + 0.25), (inv_size - (cols * (inv_rows - 1))), 1) or "")
 			or "")..
@@ -86,24 +87,30 @@ minetest.register_chatcommand("pi", {
 	end,
 })
 
-if unified_inventory then
-	unified_inventory.register_button("pubinv", {
-		type = "image",
-		image = "ui_icon_pubinv.png",
-		tooltip = S("Public inventory"),
-		hide_lite = false,
-		action = function(player)
-			pubinv.open(player:get_player_name())
-		end
-	})
-end
-
-if sfinv then
-	sfinv.register_page("pubinv", {
-		title = S("Public inventory"),
-		get = function(self, player, context)
-			local formspec, size = pubinv.formspec(player:get_player_name())
-			return sfinv.make_formspec(player, context, formspec, false, size)
-		end
-	})
-end
+minetest.register_on_mods_loaded(function()
+	if minetest.get_modpath("mcl_formspec") then
+		use_mcl_formspec = true
+	end
+	
+	if minetest.get_modpath("unified_inventory") then
+		unified_inventory.register_button("pubinv", {
+			type = "image",
+			image = "ui_icon_pubinv.png",
+			tooltip = S("Public inventory"),
+			hide_lite = false,
+			action = function(player)
+				pubinv.open(player:get_player_name())
+			end
+		})
+	end
+	
+	if minetest.get_modpath("sfinv") then
+		sfinv.register_page("pubinv", {
+			title = S("Public inventory"),
+			get = function(self, player, context)
+				local formspec, size = pubinv.formspec(player:get_player_name())
+				return sfinv.make_formspec(player, context, formspec, false, size)
+			end
+		})
+	end
+end)
